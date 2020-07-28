@@ -1,0 +1,42 @@
+{
+  "name": "qif-mapper-ts",
+  "version": "0.0.1",
+  "description": "Typescript library to map QIF formatted data",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run test:singlerun && npm run build",
+    "test": "npm run test:watch",
+    "test:singlerun": "mocha",
+    "test:watch": "mocha --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/cluskii/qif-parser-ts.git"
+  },
+  "keywords": [
+    "qif",
+    "finance",
+    "typescript",
+    "parser"
+  ],
+  "author": "Andrew McCluskey (@cluskii)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/cluskii/qif-parser-ts/issues"
+  },
+  "homepage": "https://gitlab.com/cluskii/qif-parser-ts#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {}
+}
