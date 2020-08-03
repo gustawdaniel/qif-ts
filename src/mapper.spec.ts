@@ -1,36 +1,36 @@
 import { expect } from 'chai';
 import { jsonToQif, qifToJson } from './mapper';
-import { QifData } from './types';
+import { QifData, QifTransaction, QifType } from './types';
 
 describe('jsonToQif()', () => {
   it('should write type correctly', () => {
     const object: QifData = {
-      type: 'Test Type',
-      transactions: [],
+      type: QifType.Bank,
+      transactions: []
     };
 
-    const output = jsonToQif(object);
+    const output: string = jsonToQif(object);
 
-    expect(output).to.equal(`!Type:Test Type`);
+    expect(output).to.equal(QifType.Bank);
   });
 
   it('should write single transaction with only amount, payee and date correctly', () => {
     const object: QifData = {
-      type: 'Test Type',
-      transactions: [{ date: '19/07/2020', amount: -20, payee: 'ATM' }],
+      type: QifType.Bank,
+      transactions: [{ date: '19/07/2020', amount: -20, payee: 'ATM' }]
     };
 
     const output = jsonToQif(object);
 
-    expect(output).to.equal(`!Type:Test Type\nD19/07/2020\nT-20\nPATM\n^`);
+    expect(output).to.equal(`!Type:Bank\nD19/07/2020\nT-20\nPATM\n^`);
   });
 
   it('should write single transaction with category correctly', () => {
     const object: QifData = {
-      type: 'Bank',
+      type: QifType.Bank,
       transactions: [
-        { date: '19/09/2020', amount: -25, payee: 'ATM', category: 'General' },
-      ],
+        { date: '19/09/2020', amount: -25, payee: 'ATM', category: 'General' }
+      ]
     };
 
     const output = jsonToQif(object);
@@ -40,15 +40,15 @@ describe('jsonToQif()', () => {
 
   it('should write single transaction with memo correctly', () => {
     const object: QifData = {
-      type: 'Bank',
+      type: QifType.Bank,
       transactions: [
         {
           date: '19/09/2020',
           amount: -25,
           payee: 'ATM',
-          memo: 'Cash for sandwiches',
-        },
-      ],
+          memo: 'Cash for sandwiches'
+        }
+      ]
     };
 
     const output = jsonToQif(object);
@@ -60,15 +60,15 @@ describe('jsonToQif()', () => {
 
   it('should write single transaction with address correctly', () => {
     const object: QifData = {
-      type: 'Bank',
+      type: QifType.Bank,
       transactions: [
         {
           date: '19/09/2019',
           amount: -15,
           payee: 'ATM',
-          address: '42 Buchanan Road',
-        },
-      ],
+          address: ['42 Buchanan Road']
+        }
+      ]
     };
 
     const output = jsonToQif(object);
@@ -80,7 +80,7 @@ describe('jsonToQif()', () => {
 
   it('should write single transaction with all fields correctly', () => {
     const object: QifData = {
-      type: 'Bank',
+      type: QifType.Bank,
       transactions: [
         {
           date: '19/09/2019',
@@ -88,9 +88,9 @@ describe('jsonToQif()', () => {
           payee: 'ATM',
           category: 'General',
           memo: 'Spending Money',
-          address: '42 Buchanan Road',
-        },
-      ],
+          address: ['42 Buchanan Road']
+        }
+      ]
     };
 
     const output = jsonToQif(object);
@@ -101,37 +101,37 @@ describe('jsonToQif()', () => {
   });
 
   it('should write multiple transactions with differing fields correctly', () => {
-      const object: QifData = {
-        type: 'Bank',
-        transactions: [
-          {
-            date: '19/09/2019',
-            amount: -15,
-            payee: 'ATM',
-            category: 'General',
-            memo: 'Spending Money',
-            address: '42 Buchanan Road',
-          },
-          {
-            date: '14/09/2019',
-            amount: 12.99,
-            payee: 'Stewart Thomson',
-            memo: 'Thanks for the pizza!',
-            address: '42 Buchanan Road',
-          },
-          {
-            date: '12/09/2019',
-            amount: 350,
-            payee: 'Work',
-            category: 'Income',
-          }
-        ]
-      };
-  
-      const output = jsonToQif(object);
-  
-      expect(output).to.equal(
-`!Type:Bank
+    const object: QifData = {
+      type: QifType.Bank,
+      transactions: [
+        {
+          date: '19/09/2019',
+          amount: -15,
+          payee: 'ATM',
+          category: 'General',
+          memo: 'Spending Money',
+          address: ['42 Buchanan Road']
+        },
+        {
+          date: '14/09/2019',
+          amount: 12.99,
+          payee: 'Stewart Thomson',
+          memo: 'Thanks for the pizza!',
+          address: ['42 Buchanan Road']
+        },
+        {
+          date: '12/09/2019',
+          amount: 350,
+          payee: 'Work',
+          category: 'Income'
+        }
+      ]
+    };
+
+    const output = jsonToQif(object);
+
+    expect(output).to.equal(
+      `!Type:Bank
 D19/09/2019
 T-15
 PATM
@@ -150,7 +150,7 @@ T350
 PWork
 LIncome
 ^`
-      );
+    );
   });
 });
 
@@ -161,17 +161,16 @@ describe('qifToJson()', () => {
 
     const output = qifToJson(qif);
 
-    expect(output.type).to.equal('Bank');
+    expect(output.type).to.equal(QifType.Bank);
     expect(output.transactions).to.be.empty;
   });
 
   it('should parse amount, payee and date correctly', () => {
-    const qif: string = 
-`!Type:Bank
+    const qif: string = `!Type:Bank
 D12/09/2019
 T350
 PWork
-^`
+^`;
     const output = qifToJson(qif);
 
     expect(output.transactions).to.have.length(1);
@@ -181,24 +180,79 @@ PWork
   });
 
   it('should parse category correctly', () => {
-    // TODO
-    throw new Error('not implemented yet');
+    const qif: string = `!Type:Bank
+D12/09/2019
+T350
+PWork
+LBills
+^`;
+    const output = qifToJson(qif);
+
+    expect(output.transactions).to.have.length(1);
+    expect(output.transactions[0].category).to.equal('Bills');
   });
 
   it('should parse memo correctly', () => {
-    // TODO
-    throw new Error('not implemented yet');
+    const qif: string = `!Type:Bank
+D12/09/2019
+T-350
+PWork
+MPizza Money
+^`;
+    const output = qifToJson(qif);
+
+    expect(output.transactions).to.have.length(1);
+    expect(output.transactions[0].memo).to.equal('Pizza Money');
   });
 
   it('should parse address correctly', () => {
-    // TODO
-    throw new Error('not implemented yet');
+    const qif: string = `!Type:Bank
+D12/09/2019
+T-350
+PWork
+A103 Dalry Road
+^`;
+    const output = qifToJson(qif);
+
+    expect(output.transactions).to.have.length(1);
+    expect(output.transactions[0].address?.length).to.equal(1);
+    expect(output.transactions[0].address).to.contain('103 Dalry Road');
   });
 
-  it('should parse multiple transactions with differing fields correctly', () => {
-    // TODO
-    throw new Error('not implemented yet');
+  it('should parse splits transactions correctly', () => {
+const qif: string = `!Type:Bank
+D12/09/2019
+T350
+PAmazon
+SGroceries
+EFood
+$125
+SMedicine
+EMedical Supplies
+$225
+A123 Amazon Way
+^`;
+    const output: QifData = qifToJson(qif);
+
+    if (output.transactions[0] !== undefined) {
+      const outputTransaction: QifTransaction = output.transactions[0];
+      expect(outputTransaction.date).to.equal('12/09/2019');
+
+      expect(outputTransaction.splits).to.have.deep.members([
+        {
+          category: 'Groceries',
+          memo: 'Food',
+          amount: 125
+        },
+        {
+          category: 'Medicine',
+          memo: 'Medical Supplies',
+          amount: 225
+        }
+      ]);
+
+    } else {
+      expect(output.transactions.length).to.equal(1);
+    }
   });
-
-
 });
