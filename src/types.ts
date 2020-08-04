@@ -24,7 +24,6 @@ export const QIF_TYPE_STRINGS_MAP: Record<string, QifType> = {
   '!Type:Invst': QifType.Investment,
   '!Type:Oth A': QifType.Asset,
   '!Type:Oth L': QifType.Liability,
-  '!Type:Invoice': QifType.Invoice,
   '!Account': QifType.Account,
   '!Type:Cat': QifType.Category,
   '!Type:Class': QifType.Class,
@@ -33,26 +32,24 @@ export const QIF_TYPE_STRINGS_MAP: Record<string, QifType> = {
 
 export type QifTransaction = {
   date?: string; // D
-  amount?: number; // T,U
-  memo?: string; // M
-  clearedStatus?: 'cleared' | 'reconciled' |'unreconciled/uncleared' // TODO parser,mapper C
-  checkNumber?:  number | 'Deposit' | 'Transfer' | 'Print' | 'ATM' | 'EFT'; // TODO parser,mapper N
-  payee?: string; // P
-  address?: string[]; // A
+  amount?: number; // T
+  clearedStatus?: string // C
+  reference?: string // N
+  payee?: string // P
+  memo?: string // M
+  address?: string[] // A
   category?: string; // L
-  reimbursableFlag?: boolean // TODO mapper F
-  splits?: QifSplit[] // TODO mapper
-  investmentAction?: 'Buy' | 'BuyX' | 'Sell' | 'SellX' | 'CGLong' | 'CGLongX' | 'CGMid' |
-  'CGMidX' | 'CGShort' | 'CGShortX' | 'Div' | 'DivX' | 'IntInc' | 'IntIncX' |
-  'ReinvDiv' | 'ReinvInt' | 'ReinvLg' | 'ReinvMd' | 'ReinvSh' | 'Reprice' |
-  'XIn' | 'XOut' | 'MiscExp' | 'MiscExpX' | 'MiscInc' | 'MiscIncX' | 'MargInt' |
-  'MargIntX' | 'RtrnCap' | 'RtrnCapX' | 'StkSplit' | 'ShrsOut' | 'ShrsIn' // TODO parser,mapper N
-  securityName?: string // todo mapper Y
-  securityPrice?: number // todo mapper I
-  shareQuantity?: number // todo mapper Q
-  comissionCost?: number // todo mapper O
-  amountTransferred?: number // todo mapper $
-  budgetedAmount?: number // todo mapper B
+
+  splits?: QifSplit[];
+
+  investmentAction?: string; // N
+  investmentSecurity?: string; // Y
+  investmentPrice?: number; // I
+  investmentQuantity?: number; // Q
+  investmentReminder?: string // P
+  investmentComission?: number // O
+  investmentAccount?: string // L
+  investmentAmountTransferred?: number // $
 }
 
 export type QifSplit = {
