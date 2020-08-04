@@ -10,7 +10,12 @@ If you require date parsing, or a CLI tool, please look into [qif2json](https://
 
 `$ npm install --save qif-mapper-ts`
 
-TODO - add usage instructions
+```javascript
+import { qifToJson, jsonToQif, QifData } from 'qif-mapper-ts';
+
+const qifData: QifData = qifToJson(qifText);
+const qifText: string = jsonToQif(qifData);
+```
 
 ## Changelog
 
