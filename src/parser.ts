@@ -32,8 +32,8 @@ export function qifToJson(data: string): QifData {
 
 function parseNonInvestmentFile(dataLines: string[], type: QifType): QifData {
   const qifData: QifData = {
-    type: type,
-    transactions: [],
+    type,
+    transactions: []
   };
 
   let transaction: QifTransaction = {};
@@ -75,7 +75,7 @@ function parseNonInvestmentFile(dataLines: string[], type: QifType): QifData {
       case 'D':
         transaction.date = lineText;
         break;
-      case 'T': 
+      case 'T':
         transaction.amount = parseFloat(lineText);
         break;
       case 'C':
@@ -117,7 +117,7 @@ function parseNonInvestmentFile(dataLines: string[], type: QifType): QifData {
 function parseInvestmentFile(dataLines: string[]): QifData {
   const qifData: QifData = {
     type: QifType.Investment,
-    transactions: [],
+    transactions: []
   };
 
   let transaction: QifTransaction = {};
@@ -140,7 +140,7 @@ function parseInvestmentFile(dataLines: string[]): QifData {
       case 'Q':
         transaction.investmentQuantity = parseFloat(lineText);
         break;
-      case 'T': 
+      case 'T':
         transaction.amount = parseFloat(lineText);
         break;
       case 'C':

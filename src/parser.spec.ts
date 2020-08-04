@@ -140,13 +140,13 @@ XBroken_Detail_Item
           {
             category: 'Groceries',
             memo: 'Food',
-            amount: 125,
+            amount: 125
           },
           {
             category: 'Medicine',
             memo: 'Medical Supplies',
-            amount: 225,
-          },
+            amount: 225
+          }
         ]);
       } else {
         expect(output.transactions.length).to.equal(1);
