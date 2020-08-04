@@ -1,4 +1,4 @@
-# qif-mapper-ts
+# qif-ts
 
 Typescript module to parse QIF files. Tries to provide a one-to-one mapping of the physical model into a typed object. Only primitives are converted, dates are read in the format given and provided as strings for the user to parse as they like.
 
@@ -8,10 +8,10 @@ If you require date parsing, or a CLI tool, please look into [qif2json](https://
 
 ## Installing and using
 
-`$ npm install --save qif-mapper-ts`
+`$ npm install --save qif-ts`
 
 ```javascript
-import { qifToJson, jsonToQif, QifData } from 'qif-mapper-ts';
+import { qifToJson, jsonToQif, QifData } from 'qif-ts';
 
 const qifData: QifData = qifToJson(qifText);
 const qifText: string = jsonToQif(qifData);
