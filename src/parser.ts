@@ -101,7 +101,7 @@ export function qifToJson(data: string): QifData {
         transaction.amountTransferred = parseFloat(lineText);
         break;
       case 'B':
-        transaction.amountTransferred = parseFloat(lineText);
+        transaction.budgetedAmount = parseFloat(lineText);
         break;
       case 'F':
         transaction.reimbursableFlag = true;

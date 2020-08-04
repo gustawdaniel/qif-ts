@@ -66,7 +66,7 @@ describe('jsonToQif()', () => {
           date: '19/09/2019',
           amount: -15,
           payee: 'ATM',
-          address: ['42 Buchanan Road']
+          address: ['42 Buchanan Road', 'Glasgow']
         }
       ]
     };
@@ -74,7 +74,7 @@ describe('jsonToQif()', () => {
     const output = jsonToQif(object);
 
     expect(output).to.equal(
-      `!Type:Bank\nD19/09/2019\nT-15\nPATM\nA42 Buchanan Road\n^`
+      `!Type:Bank\nD19/09/2019\nT-15\nPATM\nA42 Buchanan Road\nAGlasgow\n^`
     );
   });
 

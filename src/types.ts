@@ -35,24 +35,24 @@ export type QifTransaction = {
   date?: string; // D
   amount?: number; // T,U
   memo?: string; // M
-  clearedStatus?: 'cleared' | 'reconciled' |'unreconciled/uncleared' // TODO parser C
-  checkNumber?:  number | 'Deposit' | 'Transfer' | 'Print' | 'ATM' | 'EFT'; // TODO N
+  clearedStatus?: 'cleared' | 'reconciled' |'unreconciled/uncleared' // TODO parser,mapper C
+  checkNumber?:  number | 'Deposit' | 'Transfer' | 'Print' | 'ATM' | 'EFT'; // TODO parser,mapper N
   payee?: string; // P
   address?: string[]; // A
   category?: string; // L
-  reimbursableFlag?: boolean // F
-  splits?: QifSplit[]
+  reimbursableFlag?: boolean // TODO mapper F 
+  splits?: QifSplit[] //TODO mapper
   investmentAction?: 'Buy' | 'BuyX' | 'Sell' | 'SellX' | 'CGLong' | 'CGLongX' | 'CGMid' |
   'CGMidX' | 'CGShort' | 'CGShortX' | 'Div' | 'DivX' | 'IntInc' | 'IntIncX' |
   'ReinvDiv' | 'ReinvInt' | 'ReinvLg' | 'ReinvMd' | 'ReinvSh' | 'Reprice' |
   'XIn' | 'XOut' | 'MiscExp' | 'MiscExpX' | 'MiscInc' | 'MiscIncX' | 'MargInt' |
-  'MargIntX' | 'RtrnCap' | 'RtrnCapX' | 'StkSplit' | 'ShrsOut' | 'ShrsIn' // TODO parser N
-  securityName?: string // Y
-  securityPrice?: number // I
-  shareQuantity?: number // Q
-  comissionCost?: number // O
-  amountTransferred?: number // $
-  budgetedAmount?: number // B
+  'MargIntX' | 'RtrnCap' | 'RtrnCapX' | 'StkSplit' | 'ShrsOut' | 'ShrsIn' // TODO parser,mapper N
+  securityName?: string // todo mapper Y
+  securityPrice?: number // todo mapper I
+  shareQuantity?: number // todo mapper Q
+  comissionCost?: number // todo mapper O
+  amountTransferred?: number // todo mapper $
+  budgetedAmount?: number // todo mapper B
 }
 
 export type QifSplit = {

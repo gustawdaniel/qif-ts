@@ -67,6 +67,42 @@ A103 Dalry Road
     expect(output.transactions[0].address).to.contain('103 Dalry Road');
   });
 
+  it('should parse securityName,securityPrice,shareQuantity and comissionCost correctly', () => {
+    const qif: string = `!Type:Invst
+D12/09/2019
+MPizza Money
+YIBM Class 2 Acc
+I123.45
+Q12
+O11
+^`;
+    const output = qifToJson(qif);
+
+    expect(output.type).to.equal(QifType.Investment);
+    expect(output.transactions).to.have.length(1);
+    expect(output.transactions[0].securityName).to.equal('IBM Class 2 Acc');
+    expect(output.transactions[0].securityPrice).to.equal(123.45);
+    expect(output.transactions[0].shareQuantity).to.equal(12);
+    expect(output.transactions[0].comissionCost).to.equal(11);
+  });
+
+  it('should parse amountTransferred, budgetedAmount, reimbursableFlag correctly', () => {
+    const qif: string = `!Type:CCard
+D12/09/2019
+MPizza Money
+$115
+B1000
+F
+^`;
+    const output = qifToJson(qif);
+
+    expect(output.type).to.equal(QifType.Card);
+    expect(output.transactions).to.have.length(1);
+    expect(output.transactions[0].amountTransferred).to.equal(115);
+    expect(output.transactions[0].budgetedAmount).to.equal(1000);
+    expect(output.transactions[0].reimbursableFlag).to.equal(true);
+  });
+
   it('should parse splits transactions correctly', () => {
 const qif: string = `!Type:Bank
 D12/09/2019

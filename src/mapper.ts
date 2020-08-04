@@ -37,7 +37,7 @@ function transactionToString(transaction: QifTransaction): string[] {
   }
 
   if (transaction.address) {
-    output.push('A' + transaction.address.join('\n'));
+    output.push('A' + transaction.address.join('\nA'));
   }
 
   output.push('^');
