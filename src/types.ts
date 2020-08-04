@@ -40,8 +40,8 @@ export type QifTransaction = {
   payee?: string; // P
   address?: string[]; // A
   category?: string; // L
-  reimbursableFlag?: boolean // TODO mapper F 
-  splits?: QifSplit[] //TODO mapper
+  reimbursableFlag?: boolean // TODO mapper F
+  splits?: QifSplit[] // TODO mapper
   investmentAction?: 'Buy' | 'BuyX' | 'Sell' | 'SellX' | 'CGLong' | 'CGLongX' | 'CGMid' |
   'CGMidX' | 'CGShort' | 'CGShortX' | 'Div' | 'DivX' | 'IntInc' | 'IntIncX' |
   'ReinvDiv' | 'ReinvInt' | 'ReinvLg' | 'ReinvMd' | 'ReinvSh' | 'Reprice' |
