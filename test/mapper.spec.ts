@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { jsonToQif } from './mapper';
-import { QifData, QifType } from './types';
+import { jsonToQif } from '../src/mapper';
+import { QifData, QifType } from '../src/types';
 
 describe('jsonToQif()', () => {
     it('should write bank type correctly', () => {

@@ -3,4 +3,4 @@ extension:
   - 'ts'
 watch-files:
   - 'src/**/*.ts'
-spec: 'src/**/*.spec.ts'
+spec: 'test/**/*.spec.ts'

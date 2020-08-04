@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { qifToJson } from './parser';
-import { QifData, QifTransaction, QifType } from './types';
+import { qifToJson } from '../src/parser';
+import { QifData, QifTransaction, QifType } from '../src/types';
 
 describe('qifToJson()', () => {
   it('should parse type correctly', () => {

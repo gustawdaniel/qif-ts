@@ -19,4 +19,4 @@ const qifText: string = jsonToQif(qifData);
 
 ## Changelog
 
-* `0.1.0` Support for Investment, Bank, Cash, Card, Other Asset and Other Liability QIF file types
+* `0.0.1` Support for Investment, Bank, Cash, Card, Other Asset and Other Liability QIF file types
