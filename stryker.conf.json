@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutate": [
+    "src/**/*.ts"
+  ],
+  "mutator": "typescript",
+  "packageManager": "npm",
+  "reporters": [
+    "html",
+    "clear-text",
+    "progress"
+  ],
+  "testRunner": "mocha",
+  "testFramework": "mocha",
+  "coverageAnalysis": "off",
+  "tsconfigFile": "tsconfig.json"
+}
