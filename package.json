@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/cluskii/qif-parser-ts.git"
+    "url": "git+https://gitlab.com/cluskii/qif-ts.git"
   },
   "keywords": [
     "qif",
@@ -48,9 +48,9 @@
   "author": "Andrew McCluskey (@cluskii)",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/cluskii/qif-parser-ts/issues"
+    "url": "https://gitlab.com/cluskii/qif-ts/issues"
   },
-  "homepage": "https://gitlab.com/cluskii/qif-parser-ts#readme",
+  "homepage": "https://gitlab.com/cluskii/qif-ts#readme",
   "devDependencies": {
     "@types/chai": "^4.2.12",
     "@types/mocha": "^8.0.0",
