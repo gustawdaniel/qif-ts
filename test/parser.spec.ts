@@ -13,11 +13,19 @@ describe('qifToJson()', () => {
     expect(output.transactions).to.be.empty;
   });
 
+  it('should handle empty string', () => {
+
+    const qif: string = ``;
+
+    expect( () => qifToJson(qif)).to.throw('No valid QIF content found.');
+
+  });
+
   it('should throw an error on unsupported type', () => {
     const qif: string = `!Type:Memorized
     ^`;
 
-    expect( () => qifToJson(qif)).to.throw('Qif File Type not currently supported: !Type:Memorized');
+    expect( () => qifToJson(qif)).to.throw('Qif File Type not supported: !Type:Memorized');
 
   });
 

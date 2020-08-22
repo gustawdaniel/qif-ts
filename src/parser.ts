@@ -4,14 +4,20 @@ import {
   QifSplit,
   QifTransaction,
   QifType,
-  QIF_TYPE_STRINGS_MAP
+  QIF_TYPE_STRINGS_MAP,
+  QifParserError
 } from './types';
 
 export function qifToJson(data: string): QifData {
-    const dataLines: string[] = data.split('\n').map((l) => l.trim());
+    const dataLines: string[] = data.split('\n').map((l) => l.trim()).filter(l => l !== '');
 
-    const typeText: string = dataLines.shift() || '';
-    const type: QifType = QIF_TYPE_STRINGS_MAP[typeText];
+    if (dataLines.length === 0) {
+        throw new QifParserError('No valid QIF content found.');
+    }
+
+    const type: QifType = QIF_TYPE_STRINGS_MAP[dataLines[0]];
+
+    dataLines.shift();
 
     switch (type) {
         case QifType.Investment:
@@ -23,8 +29,8 @@ export function qifToJson(data: string): QifData {
         case QifType.Asset:
             return parseNonInvestmentFile(dataLines, type);
         default:
-            throw new QifMapperError(
-                'Qif File Type not currently supported: ' + type
+            throw new QifParserError(
+                'Qif File Type not supported: ' + type
             );
     }
 }
@@ -106,7 +112,7 @@ function parseNonInvestmentFile(dataLines: string[], type: QifType): QifData {
                 }
                 break;
             default:
-                throw new QifMapperError(
+                throw new QifParserError(
                     'Did not recognise detail item for line: ' + line
                 );
         }
@@ -168,7 +174,7 @@ function parseInvestmentFile(dataLines: string[]): QifData {
                 }
                 break;
             default:
-                throw new QifMapperError(
+                throw new QifParserError(
                     'Did not recognise detail item for line: ' + line
                 );
         }

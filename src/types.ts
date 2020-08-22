@@ -59,6 +59,12 @@ export type QifSplit = {
   percent?: number; // %
 }
 
+/* tslint:disable:max-classes-per-file */
 export class QifMapperError extends Error {
 
 }
+
+export class QifParserError extends Error {
+
+}
+/* tslint:enable:max-classes-per-file */

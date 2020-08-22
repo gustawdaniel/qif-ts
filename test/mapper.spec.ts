@@ -42,7 +42,7 @@ describe('jsonToQif()', () => {
             transactions: []
         };
 
-        expect(() => jsonToQif(object)).to.throw('');
+        expect(() => jsonToQif(object)).to.throw('Qif File Type not currently supported: !Account');
 
     });
 
@@ -83,6 +83,25 @@ MDo androids dream of electric sheep?
 O10
 L[PAYEE]
 $100
+^`);
+        });
+
+        it('should not write out detail items if not given in object', () => {
+            const object: QifData = {
+                type: QifType.Investment,
+                transactions: [
+                    {
+                        date: '19/07/2020',
+                        amount: 12
+                    }
+                ]
+            };
+
+            const output = jsonToQif(object);
+
+            expect(output).to.equal(`!Type:Invst
+D19/07/2020
+T12
 ^`);
         });
     });
