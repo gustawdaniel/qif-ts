@@ -10,14 +10,30 @@ If you require date parsing, or a CLI tool, please look into [qif2json](https://
 
 `$ npm install --save qif-ts`
 
-```javascript
-import { qifToJson, jsonToQif, QifData } from 'qif-ts';
+### Typescript
 
-const qifData: QifData = qifToJson(qifText);
-const qifText: string = jsonToQif(qifData);
+```typescript
+import { deserializeQif, serializeQif, QifData } from 'qif-ts';
+
+const qifData: QifData = deserializeQif(qifText);
+const qifText: string = serializeQif(qifData);
+```
+
+### Javascript
+
+Although designed for typescript applications, qif-ts will also integrate fine into javascript projects.
+
+```javascript
+const qifTs = require('qif-ts');
+
+const qifData = qifTs.deserializeQif(qifText);
+const qifText = qifTs.serializeQif(qifData);
 ```
 
 ## Changelog
 
 * `0.0.1` Support for Investment, Bank, Cash, Card, Other Asset and Other Liability QIF file types
-* `0.0.2` Handles low quality inputs with more descriptibe errors
+* `0.0.2` Handles low quality inputs with more descriptive errors
+* `1.0.0` Refactoring and addition of TsDoc documentation. 
+    * `qifToJson` to `deserializeQif`
+    * `jsonToQif` to `serializeQif`
