@@ -1,4 +1,4 @@
-export { jsonToQif } from './mapper';
-export { qifToJson } from './parser';
-export { QifData, QifTransaction } from './types';
+export { serializeQif } from './serializer';
+export { deserializeQif } from './deserializer';
+export { QifData, QifTransaction, QifType, QifSplit } from './types';
 

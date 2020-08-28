@@ -1,15 +1,15 @@
 import { expect } from 'chai';
-import { jsonToQif } from '../src/mapper';
+import { serializeQif } from '../src/serializer';
 import { QifData, QifType } from '../src/types';
 
-describe('jsonToQif()', () => {
+describe('serializeQif()', () => {
     it('should write bank type correctly', () => {
         const object: QifData = {
             type: QifType.Bank,
             transactions: []
         };
 
-        const output: string = jsonToQif(object);
+        const output: string = serializeQif(object);
 
         expect(output).to.equal(QifType.Bank);
     });
@@ -20,7 +20,7 @@ describe('jsonToQif()', () => {
             transactions: []
         };
 
-        const output: string = jsonToQif(object);
+        const output: string = serializeQif(object);
 
         expect(output).to.equal(QifType.Investment);
     });
@@ -31,7 +31,7 @@ describe('jsonToQif()', () => {
             transactions: []
         };
 
-        const output: string = jsonToQif(object);
+        const output: string = serializeQif(object);
 
         expect(output).to.equal(QifType.Card);
     });
@@ -42,7 +42,7 @@ describe('jsonToQif()', () => {
             transactions: []
         };
 
-        expect(() => jsonToQif(object)).to.throw('Qif File Type not currently supported: !Account');
+        expect(() => serializeQif(object)).to.throw('Qif File Type not currently supported: !Account');
 
     });
 
@@ -68,7 +68,7 @@ describe('jsonToQif()', () => {
                 ]
             };
 
-            const output = jsonToQif(object);
+            const output = serializeQif(object);
 
             expect(output).to.equal(`!Type:Invst
 D19/07/2020
@@ -97,7 +97,7 @@ $100
                 ]
             };
 
-            const output = jsonToQif(object);
+            const output = serializeQif(object);
 
             expect(output).to.equal(`!Type:Invst
 D19/07/2020
@@ -124,7 +124,7 @@ T12
                 ]
             };
 
-            const output = jsonToQif(object);
+            const output = serializeQif(object);
 
             expect(output).to.equal(
                 `!Type:CCard
@@ -152,7 +152,7 @@ LSpending
                 ]
             };
 
-            const output = jsonToQif(object);
+            const output = serializeQif(object);
 
             expect(output).to.equal(
                 `!Type:Bank\nD19/09/2019\nT-15\nPATM\nA42 Buchanan Road\nAGlasgow\n^`
@@ -183,7 +183,7 @@ LSpending
                 ]
             };
 
-            const output = jsonToQif(object);
+            const output = serializeQif(object);
 
             expect(output).to.equal(
                 `!Type:Bank

@@ -1,13 +1,13 @@
 import { expect } from 'chai';
-import { qifToJson } from '../src/parser';
 import { QifData, QifTransaction, QifType } from '../src/types';
+import {deserializeQif} from '../src/deserializer';
 
-describe('qifToJson()', () => {
+describe('deserializeQif()', () => {
   it('should parse type correctly', () => {
     const qif: string = `!Type:Bank
     ^`;
 
-    const output = qifToJson(qif);
+    const output = deserializeQif(qif);
 
     expect(output.type).to.equal(QifType.Bank);
     expect(output.transactions).to.be.empty;
@@ -17,7 +17,7 @@ describe('qifToJson()', () => {
 
     const qif: string = ``;
 
-    expect( () => qifToJson(qif)).to.throw('No valid QIF content found.');
+    expect( () => deserializeQif(qif)).to.throw('No valid QIF content found.');
 
   });
 
@@ -25,7 +25,7 @@ describe('qifToJson()', () => {
     const qif: string = `!Type:Memorized
     ^`;
 
-    expect( () => qifToJson(qif)).to.throw('Qif File Type not supported: !Type:Memorized');
+    expect( () => deserializeQif(qif)).to.throw('Qif File Type not supported: !Type:Memorized');
 
   });
 
@@ -46,7 +46,7 @@ LabcdeAccount
 $1300
 ^`;
 
-      const output = qifToJson(qif);
+      const output = deserializeQif(qif);
 
       expect(output.type).to.equal(QifType.Investment);
       expect(output.transactions.length).to.equal(1);
@@ -76,7 +76,7 @@ XBroken_Detail_Item
 $1300
 ^`;
 
-      expect(() => qifToJson(qif)).to.throw(
+      expect(() => deserializeQif(qif)).to.throw(
         'Did not recognise detail item for line: XBroken_Detail_Item'
       );
     });
@@ -98,7 +98,7 @@ ALondon
 LGroceries
 ^`;
 
-      const output = qifToJson(qif);
+      const output = deserializeQif(qif);
 
       expect(output.type).to.equal(QifType.Bank);
       expect(output.transactions.length).to.equal(1);
@@ -120,7 +120,7 @@ D18/02/1992
 XBroken_Detail_Item
 ^`;
 
-      expect(() => qifToJson(qif)).to.throw(
+      expect(() => deserializeQif(qif)).to.throw(
         'Did not recognise detail item for line: XBroken_Detail_Item'
       );
     });
@@ -138,7 +138,7 @@ XBroken_Detail_Item
       $225
       A123 Amazon Way
       ^`;
-      const output: QifData = qifToJson(qif);
+      const output: QifData = deserializeQif(qif);
 
       if (output.transactions[0] !== undefined) {
         const outputTransaction: QifTransaction = output.transactions[0];

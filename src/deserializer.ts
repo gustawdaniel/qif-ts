@@ -1,6 +1,5 @@
 import {
   QifData,
-  QifMapperError,
   QifSplit,
   QifTransaction,
   QifType,
@@ -8,7 +7,15 @@ import {
   QifParserError
 } from './types';
 
-export function qifToJson(data: string): QifData {
+/**
+ * Deserializes a valid QIF formatted string.
+ *
+ * @param data - The string to be deserialized
+ * @returns A QifData object describing the data in the input
+ *
+ * @public
+ */
+export function deserializeQif(data: string): QifData {
     const dataLines: string[] = data.split('\n').map((l) => l.trim()).filter(l => l !== '');
 
     if (dataLines.length === 0) {

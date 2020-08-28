@@ -1,6 +1,14 @@
 import { QifData, QifMapperError, QifTransaction, QifType } from './types';
 
-export function jsonToQif(data: QifData): string {
+/**
+ * Serializes a valid QIFData object.
+ *
+ * @param data - The QifData object to be serialised
+ * @returns The QIF formatted string
+ *
+ * @public
+ */
+export function serializeQif(data: QifData): string {
     const output: string[] = [];
 
     if (data.type) {

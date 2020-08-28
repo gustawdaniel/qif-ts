@@ -1,8 +1,18 @@
+/**
+ * Represents an entire QIF file's data.
+ *
+ * @public
+ */
 export type QifData = {
   type: QifType;
   transactions: QifTransaction[];
 }
 
+/**
+ * Enum of all possible QIF file types for a QIF file.
+ *
+ * @public
+ */
 export enum QifType {
   Cash='!Type:Cash',
   Bank='!Type:Bank',
@@ -17,19 +27,11 @@ export enum QifType {
   Memorized='!Type:Memorized'
 }
 
-export const QIF_TYPE_STRINGS_MAP: Record<string, QifType> = {
-  '!Type:Cash': QifType.Cash,
-  '!Type:Bank': QifType.Bank,
-  '!Type:CCard': QifType.Card,
-  '!Type:Invst': QifType.Investment,
-  '!Type:Oth A': QifType.Asset,
-  '!Type:Oth L': QifType.Liability,
-  '!Account': QifType.Account,
-  '!Type:Cat': QifType.Category,
-  '!Type:Class': QifType.Class,
-  '!Type:Memorized': QifType.Memorized
-}
-
+/**
+ * Represents a single item from a Qif file, with all associated item fields.
+ *
+ * @public
+ */
 export type QifTransaction = {
   date?: string; // D
   amount?: number; // T
@@ -52,11 +54,29 @@ export type QifTransaction = {
   investmentAmountTransferred?: number // $
 }
 
+/**
+ * Represents a split of a transaction.
+ *
+ * @public
+ */
 export type QifSplit = {
   category?: string; // S
   memo?: string; // E
   amount?: number; // $
   percent?: number; // %
+}
+
+export const QIF_TYPE_STRINGS_MAP: Record<string, QifType> = {
+  '!Type:Cash': QifType.Cash,
+  '!Type:Bank': QifType.Bank,
+  '!Type:CCard': QifType.Card,
+  '!Type:Invst': QifType.Investment,
+  '!Type:Oth A': QifType.Asset,
+  '!Type:Oth L': QifType.Liability,
+  '!Account': QifType.Account,
+  '!Type:Cat': QifType.Category,
+  '!Type:Class': QifType.Class,
+  '!Type:Memorized': QifType.Memorized
 }
 
 /* tslint:disable:max-classes-per-file */
