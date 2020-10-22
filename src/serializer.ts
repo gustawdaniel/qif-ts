@@ -1,4 +1,4 @@
-import { QifData, QifMapperError, QifTransaction, QifType } from './types';
+import {QifAccount, QifData, QifMapperError, QifTransaction, QifType} from './types';
 
 /**
  * Serializes a valid QIFData object.
@@ -11,15 +11,42 @@ import { QifData, QifMapperError, QifTransaction, QifType } from './types';
 export function serializeQif(data: QifData): string {
     const output: string[] = [];
 
-    if (data.type) {
-        output.push(data.type);
+    if (data.type === QifType.Account) {
+        output.push(QifType.Account);
+        data.accounts?.map(account => {
+            output.push(...accountToString(account))
+        })
+
+        data.accounts?.map(account => {
+            const selectedTransactions = data.transactions.filter(transaction => transaction.account === account.name);
+
+            if(selectedTransactions.length) {
+
+                output.push(QifType.Account);
+                output.push(...accountToString(account))
+
+                const transactionMappingFunction = getMappingFunction(("!Type:" + account.type) as QifType);
+
+                output.push(("!Type:" + account.type));
+                selectedTransactions
+                    .map((transaction) => transactionMappingFunction(transaction))
+                    .forEach((t) => {
+                        output.push(...t)
+                    });
+
+            }
+        })
+
+    } else {
+        if (data.type) output.push(data.type);
+
+        const transactionMappingFunction = getMappingFunction(data.type);
+
+        data.transactions
+            .map((transaction) => transactionMappingFunction(transaction))
+            .forEach((t) => output.push(...t));
     }
 
-    const transactionMappingFunction = getMappingFunction(data.type);
-
-    data.transactions
-        .map((transaction) => transactionMappingFunction(transaction))
-        .forEach((t) => output.push(...t));
 
     return output.join('\n');
 }
@@ -41,6 +68,21 @@ function getMappingFunction(
                 'Qif File Type not currently supported: ' + type
             );
     }
+}
+
+function accountToString(account: QifAccount): string[] {
+    const output: string[] = [];
+
+    if (account.name) {
+        output.push("N" + account.name);
+    }
+    if (account.type) {
+        output.push("T" + account.type);
+    }
+
+    output.push("^");
+
+    return output;
 }
 
 function investmentTransactionToString(transaction: QifTransaction): string[] {

@@ -1,10 +1,12 @@
 import {
-  QifData,
-  QifSplit,
-  QifTransaction,
-  QifType,
-  QIF_TYPE_STRINGS_MAP,
-  QifParserError
+    QIF_TYPE_STRINGS_MAP,
+    QifAccount,
+    QifAccountType,
+    QifData,
+    QifParserError,
+    QifSplit,
+    QifTransaction,
+    QifType
 } from './types';
 
 /**
@@ -27,6 +29,8 @@ export function deserializeQif(data: string): QifData {
     dataLines.shift();
 
     switch (type) {
+        case QifType.Account:
+            return parseMultiAccount(dataLines);
         case QifType.Investment:
             return parseInvestmentFile(dataLines);
         case QifType.Bank:
@@ -40,6 +44,136 @@ export function deserializeQif(data: string): QifData {
                 'Qif File Type not supported: ' + type
             );
     }
+}
+
+function appendEntity(qifData: QifData, type: QifType, entity: QifAccount | QifTransaction, currentBankName: string) {
+    // console.log(entity, type, type === QifType.Account);
+
+    if (type === QifType.Account) {
+        const account = entity as QifAccount;
+
+        if (qifData.accounts?.find(a => a.name === account.name)) return qifData;
+
+        qifData.accounts?.push(account);
+    } else {
+        const transaction = entity as QifTransaction;
+
+        qifData.transactions.push(transaction);
+    }
+
+    return qifData;
+}
+
+function parseMultiAccount(dataLines: string[]): QifData {
+    const defaultAccount = (): QifAccount => ({name: '', type: QifAccountType.Cash});
+    const defaultTransaction = ({account}: { account: string }): QifTransaction => ({amount: 0, account})
+
+    let type = {
+        list_name: QifType.Account
+    };
+    let currentBankName = '';
+    let account: QifAccount = defaultAccount();
+    let transaction: QifTransaction = defaultTransaction({account: ''});
+    let parsingSplit = false;
+    let currentSplit: QifSplit = {};
+
+    let qifData: QifData = {
+        accounts: [],
+        transactions: [],
+        type: QifType.Account
+    };
+
+    for (const line of dataLines) {
+        const lineText: QifAccountType | string = line.substring(1);
+
+        // handle Splits
+        if (parsingSplit) {
+            switch (line[0]) {
+                case 'E':
+                    currentSplit.memo = lineText;
+                    continue;
+                case '$':
+                    currentSplit.amount = parseFloat(lineText);
+                    continue;
+                case '%':
+                    currentSplit.percent = parseFloat(lineText);
+                    continue;
+                case 'S':
+                    transaction.splits = transaction.splits || [];
+                    transaction.splits.push(currentSplit);
+                    currentSplit = {};
+                    currentSplit.category = lineText;
+                    continue;
+            }
+
+            if (Object.keys(currentSplit).length > 0) {
+                transaction.splits = transaction.splits || [];
+                transaction.splits.push(currentSplit);
+                currentSplit = {};
+            }
+            parsingSplit = false;
+        }
+
+        switch (line[0]) {
+            case '!':
+                if (line === QifType.Account) {
+                    type.list_name = QifType.Account
+                    account = defaultAccount();
+                } else {
+                    type.list_name = line as QifType
+                    transaction = defaultTransaction({account: currentBankName});
+                }
+                break;
+            case 'D':
+                transaction.date = lineText;
+                break;
+            case 'C':
+                transaction.clearedStatus = lineText;
+                break;
+            case 'M':
+                transaction.memo = lineText;
+                break;
+            case 'A':
+                transaction.address = transaction.address || [];
+                transaction.address.push(lineText);
+                break;
+            case 'L':
+                transaction.category = lineText;
+                break;
+            case 'N':
+                if (type.list_name === QifType.Account)
+                    account.name = lineText;
+                else
+                    transaction.reference = lineText;
+                break;
+            case 'T':
+                if (type.list_name === QifType.Account) {
+                    account.type = lineText as QifAccountType;
+                } else {
+                    transaction.amount = Number.parseFloat(lineText);
+                }
+                break;
+            case 'P':
+                transaction.payee = lineText;
+                break;
+            case 'S': // Split
+                parsingSplit = true;
+                currentSplit.category = lineText;
+                break;
+            case '^':
+                let entity: QifAccount | QifTransaction;
+                if (type.list_name === QifType.Account) {
+                    currentBankName = account.name;
+                    entity = account;
+                } else {
+                    entity = transaction;
+                }
+                qifData = appendEntity(qifData, type.list_name, {...entity}, currentBankName);
+                transaction = defaultTransaction({account: currentBankName});
+
+        }
+    }
+    return qifData;
 }
 
 function parseNonInvestmentFile(dataLines: string[], type: QifType): QifData {
@@ -56,7 +190,7 @@ function parseNonInvestmentFile(dataLines: string[], type: QifType): QifData {
         const lineText = line.substring(1);
 
         // handle Splits
-        if (parsingSplit === true) {
+        if (parsingSplit) {
             switch (line[0]) {
                 case 'E':
                     currentSplit.memo = lineText;

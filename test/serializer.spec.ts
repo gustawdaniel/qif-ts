@@ -1,6 +1,6 @@
-import { expect } from 'chai';
-import { serializeQif } from '../src/serializer';
-import { QifData, QifType } from '../src/types';
+import {expect} from 'chai';
+import {serializeQif} from '../src/serializer';
+import {QifAccountType, QifData, QifType} from '../src/types';
 
 describe('serializeQif()', () => {
     it('should write bank type correctly', () => {
@@ -38,11 +38,11 @@ describe('serializeQif()', () => {
 
     it('should throw an error on unsupported type', () => {
         const object: QifData = {
-            type: QifType.Account,
+            type: QifType.Memorized,
             transactions: []
         };
 
-        expect(() => serializeQif(object)).to.throw('Qif File Type not currently supported: !Account');
+        expect(() => serializeQif(object)).to.throw('Qif File Type not currently supported: !Type:Memorized');
 
     });
 
@@ -200,4 +200,95 @@ EGloves
             );
         });
     });
+
+    it('multi account file should be serializable', () => {
+        const object: QifData = {
+            accounts: [
+                {name: 'Alior GBP', type: 'Bank' as QifAccountType},
+                {name: 'Alior PLN', type: 'Bank' as QifAccountType}
+            ],
+            transactions: [
+                {
+                    amount: 750,
+                    account: 'Alior PLN',
+                    date: "04/30'16",
+                    payee: 'Web Page',
+                    category: 'Income:Invoices'
+                },
+                {
+                    amount: -668.28,
+                    account: 'Alior PLN',
+                    date: "05/04'16",
+                    payee: 'Accounting',
+                    category: 'Company:Accounting'
+                },
+                {
+                    amount: 900,
+                    account: 'Alior GBP',
+                    date: "04/30'16",
+                    payee: 'New computer',
+                    category: 'Company:Devices'
+                },
+                {
+                    amount: -855.28,
+                    account: 'Alior GBP',
+                    date: "05/04'16",
+                    payee: 'Coffee',
+                    category: 'Food:Drink'
+                }
+            ],
+            type: '!Account' as QifType
+        };
+
+        const expectedOut = `!Account
+NAlior GBP
+TBank
+^
+NAlior PLN
+TBank
+^
+!Account
+NAlior GBP
+TBank
+^
+!Type:Bank
+D04/30'16
+U900.00
+T900.00
+PNew computer
+LCompany:Devices
+^
+D05/04'16
+U-855.28
+T-855.28
+PCoffee
+LFood:Drink
+^
+!Account
+NAlior PLN
+TBank
+^
+!Type:Bank
+D04/30'16
+U750.00
+T750.00
+PWeb Page
+LIncome:Invoices
+^
+D05/04'16
+U-668.28
+T-668.28
+PAccounting
+LCompany:Accounting
+^`;
+        const output = serializeQif(object);
+
+        expect(output).to.equal(
+            expectedOut
+                .split('\n')
+                .filter((l: string) => l[0] !== 'U')
+                .map(l => l[0] === 'T' && parseFloat(l.substring(1)) ? 'T' + parseFloat(l.substring(1)) : l)
+                .join('\n')
+        );
+    })
 });

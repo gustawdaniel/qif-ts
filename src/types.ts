@@ -5,6 +5,7 @@
  */
 export type QifData = {
   type: QifType;
+  accounts?: QifAccount[];
   transactions: QifTransaction[];
 }
 
@@ -27,6 +28,17 @@ export enum QifType {
   Memorized='!Type:Memorized'
 }
 
+export enum QifAccountType {
+  Cash='Cash',
+  Bank='Bank',
+  Card='Card',
+}
+
+export type QifAccount = {
+  name: string // N
+  type: QifAccountType // T
+}
+
 /**
  * Represents a single item from a Qif file, with all associated item fields.
  *
@@ -41,7 +53,7 @@ export type QifTransaction = {
   memo?: string // M
   address?: string[] // A
   category?: string; // L
-
+  account?: string; // only for multi accounts
   splits?: QifSplit[];
 
   investmentAction?: string; // N
