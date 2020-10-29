@@ -31,12 +31,16 @@ export enum QifType {
 export enum QifAccountType {
   Cash='Cash',
   Bank='Bank',
-  Card='Card',
+  Card='Card'
 }
 
 export type QifAccount = {
   name: string // N
   type: QifAccountType // T
+  currency?: string // C
+  description?: string // D
+  order?: number // O
+  hidden?: boolean // H
 }
 
 /**
@@ -55,6 +59,7 @@ export type QifTransaction = {
   category?: string; // L
   account?: string; // only for multi accounts
   splits?: QifSplit[];
+  order?: number;
 
   investmentAction?: string; // N
   investmentSecurity?: string; // Y

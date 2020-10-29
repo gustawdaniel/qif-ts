@@ -79,6 +79,18 @@ function accountToString(account: QifAccount): string[] {
     if (account.type) {
         output.push("T" + account.type);
     }
+    if (account.currency) {
+        output.push("C" + account.currency);
+    }
+    if (account.description) {
+        output.push("D" + account.description);
+    }
+    if (account.order) {
+        output.push("O" + account.order);
+    }
+    if (account.hidden) {
+        output.push("H" + account.hidden);
+    }
 
     output.push("^");
 

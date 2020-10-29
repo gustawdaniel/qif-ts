@@ -68,7 +68,7 @@ function parseMultiAccount(dataLines: string[]): QifData {
     const defaultAccount = (): QifAccount => ({name: '', type: QifAccountType.Cash});
     const defaultTransaction = ({account}: { account: string }): QifTransaction => ({amount: 0, account})
 
-    let type = {
+    const type = {
         list_name: QifType.Account
     };
     let currentBankName = '';
@@ -125,10 +125,24 @@ function parseMultiAccount(dataLines: string[]): QifData {
                 }
                 break;
             case 'D':
-                transaction.date = lineText;
+                if (type.list_name === QifType.Account) {
+                    account.description = lineText;
+                } else {
+                    transaction.date = lineText;
+                }
+                break;
+            case 'O':
+                account.order = parseInt(lineText);
+                break;
+            case 'H':
+                account.hidden = lineText === 'true';
                 break;
             case 'C':
-                transaction.clearedStatus = lineText;
+                if (type.list_name === QifType.Account) {
+                    account.currency = lineText;
+                } else {
+                    transaction.clearedStatus = lineText;
+                }
                 break;
             case 'M':
                 transaction.memo = lineText;
